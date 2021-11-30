@@ -79,4 +79,10 @@ mod tests {
         Student::delete(&pool, id).await?;
         Ok(())
     }
+
+    #[test]
+    fn should_fail() {
+        assert_eq!(3, 2 + 2);
+    }
+
 }
