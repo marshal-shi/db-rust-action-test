@@ -1,6 +1,12 @@
 name: GitHub Actions Test
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 env:
   DATABASE_TEST_URL: postgres://postgres:postgres@postgres:5432/action-db
@@ -30,13 +36,13 @@ jobs:
         with:
           toolchain: stable
       - run: echo "123"
-      # - name: Install sqlx-cli
-      #   run: cargo install sqlx-cli --no-default-features --features postgres
-      # - name: Run sqlx migrate
-      #   run: sqlx migrate run # since we are using same db for build and test. Only migrate once
-      # - name: Cargo build
-      #   run: cargo build
-      # # - name: Cargo build --release
-      # #   run: cargo build --release
-      # - name: Run tests
-      #   run: cargo test -- --nocapture --test-threads=1
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features postgres
+      - name: Run sqlx migrate
+        run: sqlx migrate run # since we are using same db for build and test. Only migrate once
+      - name: Cargo build
+        run: cargo build
+      # - name: Cargo build --release
+      #   run: cargo build --release
+      - name: Run tests
+        run: cargo test -- --nocapture --test-threads=1
