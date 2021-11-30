@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 'releases/**'
   pull_request:
     branches:
       - main
@@ -35,14 +36,24 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: echo "123"
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v1.3.0
+
       - name: Install sqlx-cli
         run: cargo install sqlx-cli --no-default-features --features postgres
+      # since we are using same db for build and test. Only migrate once
       - name: Run sqlx migrate
-        run: sqlx migrate run # since we are using same db for build and test. Only migrate once
+        run: sqlx migrate run
+
       - name: Cargo build
+        if: github.ref == 'refs/heads/main'
         run: cargo build
-      # - name: Cargo build --release
-      #   run: cargo build --release
+      - name: Cargo build --release
+        if:
+          contains('
+            refs/heads/releases
+          ', github.ref)
+        run: cargo build --release
+
       - name: Run tests
         run: cargo test -- --nocapture --test-threads=1
