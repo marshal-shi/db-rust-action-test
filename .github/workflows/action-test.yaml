@@ -16,11 +16,11 @@ jobs:
     services:
       postgres:
         image: postgres
-      env:
-        POSTGRES_DB: action-db
-        POSTGRES_PASSWORD: postgres
-      ports:
-        - 5432:5432
+        env:
+          POSTGRES_DB: action-db
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         
     steps:
       - name: Check out repository code
@@ -29,13 +29,14 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: Install sqlx-cli
-        run: cargo install sqlx-cli --no-default-features --features postgres
-      - name: Run sqlx migrate
-        run: sqlx migrate run # since we are using same db for build and test. Only migrate once
-      - name: Cargo build
-        run: cargo build
-      # - name: Cargo build --release
-      #   run: cargo build --release
-      - name: Run tests
-        run: cargo test -- --nocapture --test-threads=1
+      - run: echo "123"
+      # - name: Install sqlx-cli
+      #   run: cargo install sqlx-cli --no-default-features --features postgres
+      # - name: Run sqlx migrate
+      #   run: sqlx migrate run # since we are using same db for build and test. Only migrate once
+      # - name: Cargo build
+      #   run: cargo build
+      # # - name: Cargo build --release
+      # #   run: cargo build --release
+      # - name: Run tests
+      #   run: cargo test -- --nocapture --test-threads=1
